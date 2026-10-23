@@ -49,10 +49,9 @@ public class SqlInjectionLesson10 implements AssignmentEndpoint {
     String query = "SELECT * FROM access_log WHERE action LIKE '%" + action + "%'";
 
     try (Connection connection = dataSource.getConnection()) {
-      try {
-        Statement statement =
-            connection.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+      try (Statement statement =
+          connection.createStatement(
+              ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
         ResultSet results = statement.executeQuery(query);
 
         if (results.getStatement() != null) {
@@ -94,9 +93,7 @@ public class SqlInjectionLesson10 implements AssignmentEndpoint {
   }
 
   private boolean tableExists(Connection connection) {
-    try {
-      Statement stmt =
-          connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+    try (Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
       ResultSet results = stmt.executeQuery("SELECT * FROM access_log");
       int cols = results.getMetaData().getColumnCount();
       return (cols > 0);
