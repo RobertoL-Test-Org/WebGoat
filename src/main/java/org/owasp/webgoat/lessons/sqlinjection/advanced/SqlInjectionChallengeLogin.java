@@ -29,10 +29,10 @@ public class SqlInjectionChallengeLogin implements AssignmentEndpoint {
       @RequestParam("username_login") String username,
       @RequestParam("password_login") String password)
       throws Exception {
-    try (var connection = dataSource.getConnection()) {
-      var statement =
-          connection.prepareStatement(
-              "select password from sql_challenge_users where userid = ? and password = ?");
+    try (var connection = dataSource.getConnection();
+        var statement =
+            connection.prepareStatement(
+                "select password from sql_challenge_users where userid = ? and password = ?")) {
       statement.setString(1, username);
       statement.setString(2, password);
       var resultSet = statement.executeQuery();
